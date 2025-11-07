@@ -1,9 +1,9 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Formik, Form, Field, type FormikHelpers, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import css from './NoteForm.module.css';
 import type { NewNote, Tag } from '../../types/note';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createNote } from '../../services/noteService';
+import { createNote } from '@/lib/api';
 
 interface NoteFormProps {
   onClose: () => void;
