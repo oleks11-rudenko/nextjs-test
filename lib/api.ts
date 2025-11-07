@@ -12,11 +12,16 @@ interface NotesHttpResponse {
 export async function fetchNotes(page: number, search: string): Promise<NotesHttpResponse> {
   const response = await axios.get<NotesHttpResponse>('notes/', {
     params: {
-      ...(search !== '' && { search: search }),
+      ...(search !== '' && { search }),
       page,
       perPage: 12,
     },
   });
+  return response.data;
+}
+
+export async function fetchNoteById(noteId: string): Promise<Note> {
+  const response = await axios.get<Note>(`notes/${noteId}`);
   return response.data;
 }
 

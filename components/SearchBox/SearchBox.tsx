@@ -2,14 +2,12 @@ import css from './SearchBox.module.css';
 
 interface SearchBoxProps {
   searchQuery: string;
-  setSearchQuery: (newSearchQuery: string) => void;
-  resetPage: () => void;
+  onSearchChange: (newSearchQuery: string) => void;
 }
 
-export default function SearchBox({ searchQuery, setSearchQuery, resetPage }: SearchBoxProps) {
+export default function SearchBox({ searchQuery, onSearchChange }: SearchBoxProps) {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value);
-    resetPage();
+    onSearchChange(event.target.value);
   };
 
   return (

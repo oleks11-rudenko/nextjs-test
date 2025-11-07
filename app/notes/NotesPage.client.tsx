@@ -17,7 +17,7 @@ export default function NotesPageClient() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const { data, isSuccess } = useQuery({
-    queryKey: ['notes', currentPage, searchQuery],
+    queryKey: ['notes', { page: currentPage, search: searchQuery }],
     queryFn: () => fetchNotes(currentPage, searchQuery),
     placeholderData: keepPreviousData,
     refetchOnMount: false,
@@ -28,20 +28,15 @@ export default function NotesPageClient() {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const debouncedSearchQuery = useDebouncedCallback(setSearchQuery, 300);
-
-  const resetPage = () => {
+  const handleSearchChange = useDebouncedCallback((value: string) => {
+    setSearchQuery(value);
     setCurrentPage(1);
-  };
+  }, 300);
 
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
-        <SearchBox
-          searchQuery={searchQuery}
-          setSearchQuery={debouncedSearchQuery}
-          resetPage={resetPage}
-        />
+        <SearchBox searchQuery={searchQuery} onSearchChange={handleSearchChange} />
         {totalPages > 1 && isSuccess && (
           <Pagination
             totalPages={totalPages}
