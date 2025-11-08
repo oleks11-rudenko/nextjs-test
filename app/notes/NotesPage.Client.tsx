@@ -1,15 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import { useDebouncedCallback } from 'use-debounce';
+import { fetchNotes } from '@/lib/api';
 import css from './NotesPage.module.css';
 import SearchBox from '@/components/SearchBox/SearchBox';
 import Pagination from '@/components/Pagination/Pagination';
 import NoteList from '@/components/NoteList/NoteList';
 import Modal from '@/components/Modal/Modal';
 import NoteForm from '@/components/NoteForm/NoteForm';
-import { fetchNotes } from '@/lib/api';
 
 export default function NotesPageClient() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -17,7 +17,7 @@ export default function NotesPageClient() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const { data, isSuccess } = useQuery({
-    queryKey: ['notes', { page: currentPage, search: searchQuery }],
+    queryKey: ['notes', currentPage, searchQuery],
     queryFn: () => fetchNotes(currentPage, searchQuery),
     placeholderData: keepPreviousData,
     refetchOnMount: false,
@@ -28,15 +28,20 @@ export default function NotesPageClient() {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const handleSearchChange = useDebouncedCallback((value: string) => {
-    setSearchQuery(value);
+  const debouncedSearchQuery = useDebouncedCallback(setSearchQuery, 300);
+
+  const resetPage = () => {
     setCurrentPage(1);
-  }, 300);
+  };
 
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
-        <SearchBox searchQuery={searchQuery} onSearchChange={handleSearchChange} />
+        <SearchBox
+          searchQuery={searchQuery}
+          setSearchQuery={debouncedSearchQuery}
+          resetPage={resetPage}
+        />
         {totalPages > 1 && isSuccess && (
           <Pagination
             totalPages={totalPages}
