@@ -10,15 +10,19 @@ import NoteList from '@/components/NoteList/NoteList';
 import Modal from '@/components/Modal/Modal';
 import NoteForm from '@/components/NoteForm/NoteForm';
 import css from './NotesPage.module.css';
+import { useParams } from 'next/navigation';
 
 export default function NotesClient() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
+  const { slug } = useParams<{ slug: string[] }>();
+  const tag = slug[0] === 'all' ? undefined : slug[0];
+
   const { data, isSuccess } = useQuery({
-    queryKey: ['notes', { page: currentPage, search: searchQuery }],
-    queryFn: () => fetchNotes(currentPage, searchQuery),
+    queryKey: ['notes', { page: currentPage, search: searchQuery, tag }],
+    queryFn: () => fetchNotes(currentPage, searchQuery, tag),
     placeholderData: keepPreviousData,
     refetchOnMount: false,
   });

@@ -4,17 +4,20 @@ import { NewNote, Note } from '@/types/note';
 axios.defaults.baseURL = 'https://notehub-public.goit.study/api/';
 axios.defaults.headers.common['Authorization'] = `Bearer ${process.env.NEXT_PUBLIC_NOTEHUB_TOKEN}`;
 
+export const tags = ['Todo', 'Work', 'Personal', 'Meeting', 'Shopping'];
+
 interface NoteshttpResponse {
   notes: Note[];
   totalPages: number;
 }
 
-export async function fetchNotes(page: number, search: string) {
+export async function fetchNotes(page: number, search: string, tag?: string) {
   const response = await axios.get<NoteshttpResponse>('notes/', {
     params: {
       ...(search !== '' && { search }),
       page,
       perPage: 12,
+      tag,
     },
   });
   return response.data;
