@@ -4,26 +4,21 @@ import { useState } from 'react';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import { useDebouncedCallback } from 'use-debounce';
 import { fetchNotes } from '@/lib/api';
-import css from './NotesPage.module.css';
 import SearchBox from '@/components/SearchBox/SearchBox';
 import Pagination from '@/components/Pagination/Pagination';
 import NoteList from '@/components/NoteList/NoteList';
 import Modal from '@/components/Modal/Modal';
 import NoteForm from '@/components/NoteForm/NoteForm';
-import { useParams } from 'next/navigation';
-import { Tag } from '@/types/note';
+import css from './NotesPage.module.css';
 
-export default function NotesPageClient() {
-  const { slug } = useParams<{ slug: Tag[] | 'All' }>();
+export default function NotesClient() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const tag = slug[0] === 'All' ? undefined : slug[0];
-
   const { data, isSuccess } = useQuery({
-    queryKey: ['notes', currentPage, searchQuery, tag],
-    queryFn: () => fetchNotes(currentPage, searchQuery, tag),
+    queryKey: ['notes', { page: currentPage, search: searchQuery }],
+    queryFn: () => fetchNotes(currentPage, searchQuery),
     placeholderData: keepPreviousData,
     refetchOnMount: false,
   });
@@ -33,20 +28,15 @@ export default function NotesPageClient() {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const debouncedSearchQuery = useDebouncedCallback(setSearchQuery, 300);
-
-  const resetPage = () => {
+  const handleSearchChange = useDebouncedCallback((value: string) => {
+    setSearchQuery(value);
     setCurrentPage(1);
-  };
+  }, 300);
 
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
-        <SearchBox
-          searchQuery={searchQuery}
-          setSearchQuery={debouncedSearchQuery}
-          resetPage={resetPage}
-        />
+        <SearchBox initialValue={searchQuery} onSearchChange={handleSearchChange} />
         {totalPages > 1 && isSuccess && (
           <Pagination
             totalPages={totalPages}
