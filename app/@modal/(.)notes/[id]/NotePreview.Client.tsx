@@ -36,10 +36,10 @@ export default function NotePreviewClient() {
           <p className={css.tag}>{note.tag}</p>
           <p className={css.date}>{note.updatedAt ?? note.createdAt}</p>
         </div>
+        <button className={css.backBtn} onClick={close}>
+          Close
+        </button>
       </div>
-      <button className={css.backBtn} onClick={close}>
-        Close
-      </button>
     </Modal>
   );
 }
