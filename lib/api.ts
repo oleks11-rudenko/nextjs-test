@@ -1,10 +1,11 @@
 import axios from 'axios';
-import { NewNote, Note } from '@/types/note';
+import { NewNote, Note, Tag } from '@/types/note';
 
 axios.defaults.baseURL = 'https://notehub-public.goit.study/api/';
 axios.defaults.headers.common['Authorization'] = `Bearer ${process.env.NEXT_PUBLIC_NOTEHUB_TOKEN}`;
 
-export const tags = ['Todo', 'Work', 'Personal', 'Meeting', 'Shopping'];
+export const tags: Tag[] = ['Todo', 'Work', 'Personal', 'Meeting', 'Shopping'];
+export const baseUrl: string = 'http://localhost:3000/';
 
 interface NoteshttpResponse {
   notes: Note[];

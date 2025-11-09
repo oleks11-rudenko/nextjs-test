@@ -3,23 +3,34 @@ import 'modern-normalize';
 import TanStackProvider from '@/components/TanStackProvider/TanStackProvider';
 import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Roboto } from 'next/font/google';
 import './globals.css';
-
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
+import { baseUrl } from '@/lib/api';
 
 export const metadata: Metadata = {
-  title: 'Homework #6',
-  description: 'Created by Oleksii Rudenko',
+  title: 'NoteHub',
+  description: 'Website for note management',
+  openGraph: {
+    title: 'NoteHub',
+    description: 'Website for note management',
+    url: `${baseUrl}`,
+    images: [
+      {
+        url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'NoteHub',
+      },
+    ],
+  },
 };
+
+const roboto = Roboto({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-roboto',
+  display: 'swap',
+});
 
 export default function RootLayout({
   children,
@@ -31,7 +42,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <TanStackProvider>
-        <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <body className={roboto.variable}>
           <Header />
           {children}
           {modal}
