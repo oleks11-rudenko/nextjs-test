@@ -12,7 +12,11 @@ interface NoteshttpResponse {
   totalPages: number;
 }
 
-export async function fetchNotes(page: number, search: string, tag?: string) {
+export async function fetchNotes(
+  page: number,
+  search: string,
+  tag?: string
+): Promise<NoteshttpResponse> {
   const response = await axios.get<NoteshttpResponse>('notes/', {
     params: {
       ...(search !== '' && { search }),
@@ -24,17 +28,17 @@ export async function fetchNotes(page: number, search: string, tag?: string) {
   return response.data;
 }
 
-export async function fetchNoteById(noteId: Note['id']) {
+export async function fetchNoteById(noteId: Note['id']): Promise<Note> {
   const response = await axios.get<Note>(`notes/${noteId}`);
   return response.data;
 }
 
-export async function createNote(newNote: NewNote) {
+export async function createNote(newNote: NewNote): Promise<Note> {
   const response = await axios.post<Note>('notes/', newNote);
   return response.data;
 }
 
-export async function deleteNote(noteId: Note['id']) {
+export async function deleteNote(noteId: Note['id']): Promise<Note> {
   const response = await axios.delete<Note>(`notes/${noteId}`);
   return response.data;
 }
