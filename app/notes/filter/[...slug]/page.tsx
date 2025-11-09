@@ -8,7 +8,7 @@ interface NotesProps {
 
 export async function generateMetadata({ params }: NotesProps) {
   const { slug } = await params;
-  const tag = slug[0] === 'all' ? undefined : slug[0];
+  const tag = slug[0] === 'all' ? 'All' : slug[0];
 
   return {
     title: `Notes: ${tag}`,
